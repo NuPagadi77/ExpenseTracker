@@ -19,38 +19,69 @@ class Program
                     Console.WriteLine("Buchung wird erfasst: ");
                     Console.Write("Betrag eingeben: ");
                     string? input = Console.ReadLine();
-                    if (!decimal.TryParse(input, out decimal betrag))
+                    if (!decimal.TryParse(input, out decimal betrag) || betrag <= 0)
                     {
-                        Console.WriteLine("Bitte einen gültigen Betrag eingeben!");
+                        Console.WriteLine("Bitte einen Betrag größer 0 eingeben!");
                     }
                     else
                     {
-                        Console.Write("Buchungsart eingeben(Einnahme/Ausgabe): ");
-                        string? art = Console.ReadLine();
+                        Console.Write("Buchungsart (Einnahme/Ausgabe): ");
+                        string? artInput = Console.ReadLine()?.Trim().ToLowerInvariant();
+
+                        Buchung.Buchungsart? art = artInput switch
+                        {
+                            "einnahme" or "ein" => Buchung.Buchungsart.Einnahme,
+                            "ausgabe" or "aus" => Buchung.Buchungsart.Ausgabe,
+                            _ => null
+                        };
+
+                        if (art is null)
+                        {
+                            Console.WriteLine("Ungültige Art - erwartet: Einnahme oder Ausgabe");
+                            Console.ReadLine();
+                            break;
+                        }
+
                         Console.Write("Kategorie eingeben: ");
                         string? kategorie = Console.ReadLine();
+                        if (string.IsNullOrWhiteSpace(kategorie))
+                        {
+                            Console.Write("Kategorie eingeben: ");
+                            kategorie = Console.ReadLine();
+                        }
+
                         Console.Write("Beschreibung eingeben: ");
                         string? beschreibung = Console.ReadLine();
-
-                        Buchung buchung = new(betrag, art, kategorie, beschreibung);
-
-                        if (art?.ToLower() == "einzahlung")
+                        if (string.IsNullOrWhiteSpace(beschreibung))
                         {
+                            Console.Write("Beschreibung eingeben: ");
+                            beschreibung = Console.ReadLine();
+                        }
+
+                        if (art == Buchung.Buchungsart.Einnahme)
+                        {
+                            Buchung buchung = new(betrag, art.Value, kategorie, beschreibung);
                             bankAccount.MakeDeposit(buchung);
                             buchungen.Add(buchung);
-                            Console.WriteLine($"Buchung {buchung.Betrag:C}  wurde erfasst");
+                            Console.WriteLine($"Buchung {buchung.Betrag:C} wurde erfasst");
+                            Console.Write("Aktueller Kontostand: ");
+                            bankAccount.PrintBalance();
                         }
-                        else if (art?.ToLower() == "auszahlung")
+                        else if (art == Buchung.Buchungsart.Ausgabe)
                         {
+                            Buchung buchung = new(betrag, art.Value, kategorie, beschreibung);
+
                             if (bankAccount.MakeWithdrawal(buchung))
                             {
                                 buchungen.Add(buchung);
-                                Console.WriteLine($"Buchung {buchung.Betrag:C}  wurde erfasst");
+                                Console.WriteLine($"Buchung {buchung.Betrag:C} wurde erfasst");
+                                Console.Write("Aktueller Kontostand: ");
+                                bankAccount.PrintBalance();
                             }
                         }
                         else
                         {
-                            Console.WriteLine("Falsche Buchungsart");
+                            Console.WriteLine("Falsche Art.");
                         }
                     }
 
@@ -66,7 +97,7 @@ class Program
                     Console.ReadLine();
                     break;
                 case 3:
-                    Console.WriteLine("Aktueller Kontostand: ");
+                    Console.Write("Aktueller Kontostand: ");
                     bankAccount.PrintBalance();
                     Console.ReadLine();
                     break;

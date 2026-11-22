@@ -4,7 +4,7 @@ public class Buchung
 {
     public decimal Betrag { get; private set; }
     public DateTime Datum { get; set; }
-    public string? Art { get; set; }
+    public Buchungsart Art { get; set; }
     public string? Kategorie { get; set; }
     public string? Beschreibung { get; set; }
 
@@ -14,7 +14,7 @@ public class Buchung
         Ausgabe
     }
 
-    public Buchung(decimal betrag, string? art, string? kategorie, string? beschreibung)
+    public Buchung(decimal betrag, Buchungsart art, string? kategorie, string? beschreibung)
     {
         Betrag = betrag;
         Datum = DateTime.Now;

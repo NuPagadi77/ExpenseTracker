@@ -24,7 +24,7 @@ public class BankAccount
             return false;
         }
         
-        if (buchung?.Betrag <= Balance)
+        if (buchung.Betrag <= Balance)
         {
             Balance -= buchung.Betrag;
             return true;
