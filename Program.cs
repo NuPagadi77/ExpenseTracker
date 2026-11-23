@@ -17,54 +17,48 @@ class Program
             {
                 case 1:
                     Console.WriteLine("Buchung wird erfasst: ");
-                    Console.Write("Betrag eingeben: ");
-                    string? input = Console.ReadLine();
-                    if (!decimal.TryParse(input, out decimal betrag) || betrag <= 0)
+
+                    decimal betrag = ReadPositiveDecimal("Betrag eingeben: ");
+
+                    Console.Write("Buchungsart (Einnahme/Ausgabe): ");
+                    string? artInput = Console.ReadLine()?.Trim().ToLowerInvariant();
+
+                    Buchung.Buchungsart? art = artInput switch
                     {
-                        Console.WriteLine("Bitte einen Betrag größer 0 eingeben!");
+                        "einnahme" or "ein" => Buchung.Buchungsart.Einnahme,
+                        "ausgabe" or "aus" => Buchung.Buchungsart.Ausgabe,
+                        _ => null
+                    };
+
+                    if (art is null)
+                    {
+                        Console.WriteLine("Ungültige Art - erwartet: Einnahme oder Ausgabe");
+                        Console.ReadLine();
+                        break;
                     }
-                    else
+
+                    string kategorie = ReadRequired("Kategorie eingeben: ");
+                    string beschreibung = ReadRequired("Beschreibung eingeben: ");
+
+                    if (art == Buchung.Buchungsart.Einnahme)
                     {
-                        Console.Write("Buchungsart (Einnahme/Ausgabe): ");
-                        string? artInput = Console.ReadLine()?.Trim().ToLowerInvariant();
+                        Buchung buchung = new(betrag, art.Value, kategorie, beschreibung);
+                        bankAccount.MakeDeposit(buchung);
+                        buchungen.Add(buchung);
+                        Console.WriteLine($"Buchung {buchung.Betrag:C} wurde erfasst");
+                        Console.Write("Aktueller Kontostand: ");
+                        bankAccount.PrintBalance();
+                    }
+                    else if (art == Buchung.Buchungsart.Ausgabe)
+                    {
+                        Buchung buchung = new(betrag, art.Value, kategorie, beschreibung);
 
-                        Buchung.Buchungsart? art = artInput switch
+                        if (bankAccount.MakeWithdrawal(buchung))
                         {
-                            "einnahme" or "ein" => Buchung.Buchungsart.Einnahme,
-                            "ausgabe" or "aus" => Buchung.Buchungsart.Ausgabe,
-                            _ => null
-                        };
-
-                        if (art is null)
-                        {
-                            Console.WriteLine("Ungültige Art - erwartet: Einnahme oder Ausgabe");
-                            Console.ReadLine();
-                            break;
-                        }
-
-                        string kategorie = ReadRequired("Kategorie eingeben: ");
-                        string beschreibung = ReadRequired("Beschreibung eingeben: ");
-
-                        if (art == Buchung.Buchungsart.Einnahme)
-                        {
-                            Buchung buchung = new(betrag, art.Value, kategorie, beschreibung);
-                            bankAccount.MakeDeposit(buchung);
                             buchungen.Add(buchung);
                             Console.WriteLine($"Buchung {buchung.Betrag:C} wurde erfasst");
                             Console.Write("Aktueller Kontostand: ");
                             bankAccount.PrintBalance();
-                        }
-                        else if (art == Buchung.Buchungsart.Ausgabe)
-                        {
-                            Buchung buchung = new(betrag, art.Value, kategorie, beschreibung);
-
-                            if (bankAccount.MakeWithdrawal(buchung))
-                            {
-                                buchungen.Add(buchung);
-                                Console.WriteLine($"Buchung {buchung.Betrag:C} wurde erfasst");
-                                Console.Write("Aktueller Kontostand: ");
-                                bankAccount.PrintBalance();
-                            }
                         }
                     }
 
@@ -132,5 +126,17 @@ class Program
         }
 
         return input.Trim();
+    }
+
+    private static decimal ReadPositiveDecimal(string message)
+    {
+        while (true)
+        {
+            Console.Write(message);
+            string? input = Console.ReadLine();
+            if (decimal.TryParse(input, out decimal value) && value > 0)
+                return value;
+            Console.WriteLine("Bitte einen Betrag größer 0 eingeben!");
+        }
     }
 }
