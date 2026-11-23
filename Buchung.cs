@@ -3,7 +3,7 @@ namespace ExpenseTracker;
 public class Buchung
 {
     public decimal Betrag { get; private set; }
-    public DateTime Datum { get; set; }
+    public DateTime Datum { get; private set; }
     public Buchungsart Art { get; set; }
     public string? Kategorie { get; set; }
     public string? Beschreibung { get; set; }
@@ -29,7 +29,7 @@ public class Buchung
         foreach (var buchung in buchungen)
         {
             Console.WriteLine(
-                $"#{counter + 1} | {buchung.Datum} | {buchung.Art} | {buchung.Betrag:C} | {buchung.Kategorie} | {buchung.Beschreibung}");
+                $"#{counter + 1} | {buchung.Datum:d} | {buchung.Art} | {buchung.Betrag:C} | {buchung.Kategorie} | {buchung.Beschreibung}");
             counter++;
         }
 

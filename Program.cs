@@ -42,21 +42,8 @@ class Program
                             break;
                         }
 
-                        Console.Write("Kategorie eingeben: ");
-                        string? kategorie = Console.ReadLine();
-                        if (string.IsNullOrWhiteSpace(kategorie))
-                        {
-                            Console.Write("Kategorie eingeben: ");
-                            kategorie = Console.ReadLine();
-                        }
-
-                        Console.Write("Beschreibung eingeben: ");
-                        string? beschreibung = Console.ReadLine();
-                        if (string.IsNullOrWhiteSpace(beschreibung))
-                        {
-                            Console.Write("Beschreibung eingeben: ");
-                            beschreibung = Console.ReadLine();
-                        }
+                        string kategorie = ReadRequiered("Kategorie eingeben: ");
+                        string beschreibung = ReadRequiered("Beschreibung eingeben: ");
 
                         if (art == Buchung.Buchungsart.Einnahme)
                         {
@@ -78,10 +65,6 @@ class Program
                                 Console.Write("Aktueller Kontostand: ");
                                 bankAccount.PrintBalance();
                             }
-                        }
-                        else
-                        {
-                            Console.WriteLine("Falsche Art.");
                         }
                     }
 
@@ -135,5 +118,19 @@ class Program
 
             Console.WriteLine("Bitte eine gültige Zahl eingeben.");
         }
+    }
+
+    private static string ReadRequiered(string message)
+    {
+        Console.Write(message);
+        string? input = Console.ReadLine();
+        while (string.IsNullOrWhiteSpace(input))
+        {
+            Console.WriteLine("Eingabe darf nicht leer sein.");
+            Console.Write(message);
+            input = Console.ReadLine();
+        }
+
+        return input.Trim();
     }
 }
