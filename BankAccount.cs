@@ -4,7 +4,7 @@ public class BankAccount
 {
     public decimal Balance { get; private set; }
 
-    public void MakeDeposit(Buchung? buchung)
+    public void MakeDeposit(Buchung buchung)
     {
         if (buchung != null)
         {
@@ -16,7 +16,7 @@ public class BankAccount
         }
     }
 
-    public bool MakeWithdrawal(Buchung? buchung)
+    public bool MakeWithdrawal(Buchung buchung)
     {
         if (buchung == null)
         {

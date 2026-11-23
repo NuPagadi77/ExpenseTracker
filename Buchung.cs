@@ -4,9 +4,9 @@ public class Buchung
 {
     public decimal Betrag { get; private set; }
     public DateTime Datum { get; private set; }
-    public Buchungsart Art { get; set; }
-    public string? Kategorie { get; set; }
-    public string? Beschreibung { get; set; }
+    public Buchungsart Art { get; private set; }
+    public string? Kategorie { get; private set; }
+    public string? Beschreibung { get; private set; }
 
     public enum Buchungsart
     {

@@ -42,8 +42,8 @@ class Program
                             break;
                         }
 
-                        string kategorie = ReadRequiered("Kategorie eingeben: ");
-                        string beschreibung = ReadRequiered("Beschreibung eingeben: ");
+                        string kategorie = ReadRequired("Kategorie eingeben: ");
+                        string beschreibung = ReadRequired("Beschreibung eingeben: ");
 
                         if (art == Buchung.Buchungsart.Einnahme)
                         {
@@ -120,7 +120,7 @@ class Program
         }
     }
 
-    private static string ReadRequiered(string message)
+    private static string ReadRequired(string message)
     {
         Console.Write(message);
         string? input = Console.ReadLine();
