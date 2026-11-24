@@ -23,11 +23,11 @@ class Program
                     Console.Write("Buchungsart (Einnahme/Ausgabe): ");
                     string? artInput = Console.ReadLine()?.Trim().ToLowerInvariant();
 
-                    string kategorie = ReadRequired("Kategorie eingeben: ");
-                    string beschreibung = ReadRequired("Beschreibung eingeben: ");
-
                     if (TryParseBuchungsart(artInput, out Buchung.Buchungsart art))
                     {
+                        string kategorie = ReadRequired("Kategorie eingeben: ");
+                        string beschreibung = ReadRequired("Beschreibung eingeben: ");
+
                         Buchung buchung = new(betrag, art, kategorie, beschreibung);
                         if (art == Buchung.Buchungsart.Einnahme)
                         {
@@ -46,7 +46,15 @@ class Program
                                 Console.Write("Aktueller Kontostand: ");
                                 bankAccount.PrintBalance();
                             }
+                            else
+                            {
+                                Console.WriteLine("Auszahlung nicht möglich. Unzureichender Saldo!");
+                            }
                         }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Ungültige Art - erwartet: Einnahme oder Ausgabe");
                     }
 
                     Console.ReadLine();
