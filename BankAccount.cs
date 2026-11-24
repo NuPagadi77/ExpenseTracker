@@ -6,32 +6,16 @@ public class BankAccount
 
     public void MakeDeposit(Buchung buchung)
     {
-        if (buchung != null)
-        {
-            Balance += buchung.Betrag;
-        }
-        else
-        {
-            Console.WriteLine("Ungültige Eingabe!");
-        }
+        Balance += buchung.Betrag;
     }
 
     public bool MakeWithdrawal(Buchung buchung)
     {
-        if (buchung == null)
-        {
-            Console.WriteLine("Auszahlung nicht möglich, Buchung ist nicht vollständig!");
+        if (buchung.Betrag > Balance)
             return false;
-        }
-        
-        if (buchung.Betrag <= Balance)
-        {
-            Balance -= buchung.Betrag;
-            return true;
-        }
 
-        Console.WriteLine("Auszahlung nicht möglich. Unzureichender Saldo!");
-        return false;
+        Balance -= buchung.Betrag;
+        return true;
     }
 
     public void PrintBalance()
